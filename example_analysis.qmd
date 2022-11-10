@@ -1,0 +1,145 @@
+---
+title: "Example analysis"
+bibliography: my-refs.bib
+---
+```{css, echo=FALSE}
+pre, code {white-space:pre !important; overflow-x:auto}
+```
+
+## Question
+- Prior to this year's Halloween, one of my friends visiting me in Baltimore said that many horror movies have been shot in Baltimore. This intrigued me to explore the common filming locations, popular words in the plots, and the ratings of horror movies released in the US.
+- In this example data analysis, I focus on three questions:
+  - How many times does Baltimore appear as the filming city? Is it really a popular place?
+  - What are the top 25 most frequent words in the plots?
+  - What are the average review ratings by year?
+
+## Intended Audience
+- The intended audience for this data analysis is the general public who has the same curiosity of exploring US horror movie data as me.
+
+## Original Data
+- The dataset comes from IMDB [@promptcloud_2017] by way of Kaggle. I found the dataset on TidyTuesday [@harmon] under Episode 10: Horror Movies. The dataset contains movies worldwide from 2012 onwards.
+
+```{r}
+library(here)
+
+# tests if a directory named "data" exists locally
+if(!dir.exists(here("data"))) { dir.create(here("data")) }
+
+if(!file.exists(here("data","h_movies.RDS"))){
+  h_movies <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-22/horror_movies.csv")
+  
+  # save the files to RDS objects
+  saveRDS(h_movies, file = here("data","h_movies.RDS"))
+}
+```
+
+```{r}
+h_movies <- readRDS(here("data","h_movies.RDS"))
+library(tidyverse)
+glimpse(h_movies)
+```
+
+## Data Dictionary
+- Data dictionary is available here: <https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-10-22#data-dictionary>.
+
+## Data Wrangling
+```{r}
+library(dplyr)
+library(lubridate)
+library(tidyr)
+# Check the uniqueness of movie titles
+h_movies_uni <- h_movies %>% distinct(title, .keep_all = TRUE)
+
+# Use lubridate to create a column called release_year that is a Date class
+h_movies_uni1 = h_movies_uni %>% filter(str_length(release_date) == 4) %>% mutate(release_date = paste0("1-Jan-", release_date))
+h_movies_uni2 = h_movies_uni %>% filter(str_length(release_date) != 4)
+
+h_movies_uni <- rbind(h_movies_uni1, h_movies_uni2)
+h_movies_uni <- h_movies_uni %>% mutate(release_year = year(dmy(release_date)))
+
+# Remove columns that we do not want to use
+h_movies_uni <- h_movies_uni %>% select(title, release_country, release_year, review_rating, filming_locations, plot)
+
+# Keep US only and drop rows with missing values
+h_movies_us <- h_movies_uni %>% filter(release_country == "USA") %>% drop_na()
+h_movies_us
+```
+
+```{r}
+# Extract rows containing Baltimore as the filming location
+h_movies_us %>% filter(grepl("Baltimore", filming_locations, ignore.case = TRUE)) %>% print(n = Inf) 
+```
+
+:::{.callout-note}
+Note that among the 1,326 movies with completed data released in the US, 9 were filmed in Baltimore, MD. Therefore, we do not see that Baltimore is a popular place for horror movie filming.
+:::
+
+```{r}
+# Rank the filming locations for movies released in the US and get the top 10
+h_movies_us %>% count(filming_locations, sort = TRUE) %>% slice_head(n = 10)
+```
+
+```{r}
+library(tidytext)
+# Get the frequency of the words and sort in a decreasing manner
+pop_words <- h_movies_us %>% unnest_tokens(output = word, input = plot, token = "words") %>% anti_join(stop_words) %>% count(word, sort = TRUE)
+pop_words
+```
+
+```{r}
+# Remove the word "directed" since nearly every plot starts with it and remove a few names,
+# then only keep the top 25 most frequent words
+pop_words_25 <- pop_words %>% filter(!(word %in% c("directed", "michael", "david", "james", "john", "film", "robert", "paul", "ryan", "mark", "adam", "scott", "jason"))) %>% slice_head(n = 25)
+pop_words_25
+```
+
+```{r}
+#| label: fig-words
+#| fig-cap: "A word cloud of the top 25 most frequent words"
+#| column: margin
+library(wordcloud)
+set.seed(1109)
+pop_words_25 %>% with(wordcloud(word, n, max.words = 25, colors = c("cornflowerblue", "darkorange"), scale=c(3.6, 0.5)))
+```
+
+## Plots
+Plot 1. A scatter plot of average review ratings by year:
+```{r}
+library(ggplot2)
+h_movies_us %>% group_by(release_year) %>% summarise(avg_rating = mean(review_rating)) %>% ggplot(aes(x = release_year, y = avg_rating)) + geom_point() + labs(title = "Average Review Rating by Release Year", subtitle = "This is a scatter plot of the average review rating for horror movies released in the US between\n2012 and 2017. There is an increasing trend in the average rating.", caption = "Mincen Liu") +
+  xlab("Release Year") + ylab("Average Rating")
+```
+
+Plot 2. A histogram of movie count by year in each of the top 6 filming locations:
+```{r}
+pl <- h_movies_us %>% count(filming_locations, sort = TRUE) %>% slice_head(n = 6)
+dt <- h_movies_us %>% filter(filming_locations %in% pl$filming_locations)
+dt %>% ggplot(aes(x = release_year)) + geom_histogram() + facet_wrap(filming_locations ~.) + 
+  labs(title = "Number of Movies Released in the Top 6 Filming Locations", subtitle = "This is a histogram of the number of horror movies released in the US between 2012 and 2017,\nsubgrouped by the top 6 filming places.", caption = "Mincen Liu") +
+  xlab("Release Year") + ylab("Count")
+```
+
+Plot 3. A bar plot with the top 25 words in the plots on the y-axis and the frequency of each word on the x-axis:
+```{r}
+pop_words_25 %>% mutate(word = fct_reorder(word, n)) %>% ggplot(aes(word, n)) + geom_col() + coord_flip() +
+  labs(title = "Frequency of the Top 25 Words in the Plots", subtitle = "This is a bar plot displaying the frequency of each of the top 25 most frequent words in\nthe plots of horror movies released in the US.", caption = "Mincen Liu") +
+  xlab("Top Words") + ylab("Frequency")
+```
+
+:::{.callout-tip}
+## Tip
+Interestingly, the most frequent word is `friends` which appears 132 times.
+:::
+
+![Spongebob and Patrick](s_n_p.jpg){width=50%}
+
+[@spongebob]
+
+## Summary
+Based on the analysis of this dataset, we are not able to conclude that Baltimore is a popular place for horror movie filming since there are only 9/1,326 films shot in this city. In the short plot descriptions, the top words include "friends", "family", "life", "night", "killer", "mysterious", etc. Additionally, the average movie ratings across years are displayed in Plot 1 and there is an increasing trend in the average ratings. The data analysis answers the questions proposed in the first section well.
+
+
+## List of Functions Used
+- `dplyr`: `glimpse()`, `distinct()`, `filter()`, `mutate()`, `select()`, `count()`, `slice_head()`, `anti_join()`, `group_by()`, `summarise()`
+- `tidyr`: `drop_na()`
+- `ggplot2`: `geom_point()`, `geom_histogram()`, `geom_col()`

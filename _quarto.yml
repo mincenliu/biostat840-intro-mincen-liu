@@ -1,0 +1,25 @@
+project:
+  type: website
+
+website:
+  title: "Mincen Liu"
+  description: "This is Mincen Liu's personal website."
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: about.qmd
+        text: About
+      - href: example_analysis.qmd
+        text: Example analysis
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+execute: 
+  freeze: auto
+
+

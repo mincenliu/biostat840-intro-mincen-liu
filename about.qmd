@@ -1,0 +1,37 @@
+---
+title: "About"
+---
+
+I am originally from Jinan, China. I came to the US for my undergraduate studies and continue to pursue a Master's degree in the field of public health.
+
+## Education
+
+Johns Hopkins University \| Baltimore, MD \| Aug 2022-Present\
+ScM in Biostatistics
+
+University of North Carolina at Chapel Hill \| Chapel Hill, NC \| Aug 2019-May 2022\
+BSPH with Highest Honors and Highest Distinction in Biostatistics and Mathematics\
+Minor in Computer Science
+
+## Experience
+
+UNC Center for AIDS Research (CFAR) Biostatistics Core \| May 2021-May 2022\
+Student Research Assistant
+
+## Publications
+
+1.  Rosenberg, N.E., Shook-Sa, B.E., **Liu, M.**, Stranix-Chibanda, L., Yotebieng, M., Sam-Agudu, N.A., Hudgens, M.G., Phiri, S.J., Mutale, W., Bekker, L.G., Moyo, S., Zuma, K., Charurat, M.E., Justman, J., Chi, B.H. (in press). Adult HIV-1 incidence across 15 high-burden countries in Sub-Saharan Africa from 2015-2019: pooled nationally representative estimates. *The lancet. HIV*.
+2.  Liu, H. S., Duan, S. J., Liu, S. D., Jia, F. S., Zhu, L. M., & **Liu, M. C**. (2018). Robot-assisted percutaneous screw placement combined with pelvic internal fixator for minimally invasive treatment of unstable pelvic ring fractures. *The international journal of medical robotics + computer assisted surgery : MRCAS, 14*(5), e1927. <https://doi.org/10.1002/rcs.1927>
+
+## Presentations
+
+1.  Rosenberg, N.E., Young, A., **Liu, M.**, Shook-Sa, B.E., Sam-Agudu, N.A., Stranix-Chibanda, L., Yotebieng, M., Charurat, M., Justman, J.E., Chi, B.H. (2022, July 29-August 2). *Identifying women at highest risk for HIV acquisition across sub-Saharan Africa: A risk score based on machine-learning methods*. International AIDS Conference, Montreal, QC, Canada.
+2.  Rosenberg, N.E., Shook-Sa, B., **Liu, M.**, Stranix-Chibanda, L., Yotebieng, M., Sam-Agudu, N., Phiri, S.J., Mutale, W., Bekker, L., Charurat, M.E., Justman, J.E., Chi, B. (2022, February 12-24). *Empirical Estimates of Adult HIV Incidence Across 12 Countries in Sub-Saharan Africa*. Conference on Retroviruses and Opportunistic Infections, Denver, CO, United States.
+
+## Honors and Awards
+
+**Phi Beta Kappa**, University of North Carolina at Chapel Hill \| Feb 2021
+
+## Professional Membership
+
+American Statistical Association

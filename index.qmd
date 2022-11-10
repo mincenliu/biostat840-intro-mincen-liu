@@ -1,0 +1,16 @@
+---
+title: "Mincen Liu"
+image: headshot1.jpg
+about: 
+  template: jolla
+  image-width: 13em
+  links:
+    - text: LinkedIn
+      href: https://www.linkedin.com/in/mincenliu
+    - text: GitHub
+      href: https://github.com/mincenliu
+    - text: Email
+      href: mailto:mliu128@jhmi.edu
+---
+
+Hi! My name is Mincen Liu. I am a biostatistics Master's student at the Johns Hopkins Bloomberg School of Public Health. I am interested in infectious diseases, epidemiological methods, and health policy evaluation.

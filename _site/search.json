@@ -1,0 +1,114 @@
+[
+  {
+    "objectID": "example_analysis.html#question",
+    "href": "example_analysis.html#question",
+    "title": "Example analysis",
+    "section": "Question",
+    "text": "Question\n\nPrior to this year’s Halloween, one of my friends visiting me in Baltimore said that many horror movies have been shot in Baltimore. This intrigued me to explore the common filming locations, popular words in the plots, and the ratings of horror movies released in the US.\nIn this example data analysis, I focus on three questions:\n\nHow many times does Baltimore appear as the filming city? Is it really a popular place?\nWhat are the top 25 most frequent words in the plots?\nWhat are the average review ratings by year?"
+  },
+  {
+    "objectID": "example_analysis.html#intended-audience",
+    "href": "example_analysis.html#intended-audience",
+    "title": "Example analysis",
+    "section": "Intended Audience",
+    "text": "Intended Audience\n\nThe intended audience for this data analysis is the general public who has the same curiosity of exploring US horror movie data as me."
+  },
+  {
+    "objectID": "example_analysis.html#original-data",
+    "href": "example_analysis.html#original-data",
+    "title": "Example analysis",
+    "section": "Original Data",
+    "text": "Original Data\n\nThe dataset comes from IMDB (PromptCloud 2017) by way of Kaggle. I found the dataset on TidyTuesday (Harmon, n.d.) under Episode 10: Horror Movies. The dataset contains movies worldwide from 2012 onwards.\n\n\nlibrary(here)\n\nhere() starts at /Users/mincen/Desktop/JHU/Courses/Fall22Term2/140.840_Statistical_Programming/Projects/biostat840-intro-mincen-liu\n\n# tests if a directory named \"data\" exists locally\nif(!dir.exists(here(\"data\"))) { dir.create(here(\"data\")) }\n\nif(!file.exists(here(\"data\",\"h_movies.RDS\"))){\n  h_movies <- readr::read_csv(\"https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-22/horror_movies.csv\")\n  \n  # save the files to RDS objects\n  saveRDS(h_movies, file = here(\"data\",\"h_movies.RDS\"))\n}\n\nRows: 3328 Columns: 12\n\n\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (11): title, genres, release_date, release_country, movie_rating, movie_...\ndbl  (1): review_rating\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\nh_movies <- readRDS(here(\"data\",\"h_movies.RDS\"))\nlibrary(tidyverse)\n\n── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──\n✔ ggplot2 3.3.6     ✔ purrr   0.3.4\n✔ tibble  3.1.8     ✔ dplyr   1.0.9\n✔ tidyr   1.2.0     ✔ stringr 1.4.1\n✔ readr   2.1.2     ✔ forcats 0.5.2\n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\n\nglimpse(h_movies)\n\nRows: 3,328\nColumns: 12\n$ title             <chr> \"Gut (2012)\", \"The Haunting of Mia Moss (2017)\", \"Sl…\n$ genres            <chr> \"Drama| Horror| Thriller\", \"Horror\", \"Horror\", \"Come…\n$ release_date      <chr> \"26-Oct-12\", \"13-Jan-17\", \"21-Oct-17\", \"23-Apr-13\", …\n$ release_country   <chr> \"USA\", \"USA\", \"Canada\", \"USA\", \"USA\", \"UK\", \"USA\", \"…\n$ movie_rating      <chr> NA, NA, NA, \"NOT RATED\", NA, NA, \"NOT RATED\", NA, \"P…\n$ review_rating     <dbl> 3.9, NA, NA, 3.7, 5.8, NA, 5.1, 6.5, 4.6, 5.4, 5.3, …\n$ movie_run_time    <chr> \"91 min\", NA, NA, \"82 min\", \"80 min\", \"93 min\", \"90 …\n$ plot              <chr> \"Directed by Elias. With Jason Vail, Nicholas Wilder…\n$ cast              <chr> \"Jason Vail|Nicholas Wilder|Sarah Schoofs|Kirstianna…\n$ language          <chr> \"English\", \"English\", \"English\", \"English\", \"Italian…\n$ filming_locations <chr> \"New York, USA\", NA, \"Sudbury, Ontario, Canada\", \"Ba…\n$ budget            <chr> NA, \"$30,000\", NA, NA, NA, \"$3,400,000\", NA, NA, NA,…"
+  },
+  {
+    "objectID": "example_analysis.html#data-dictionary",
+    "href": "example_analysis.html#data-dictionary",
+    "title": "Example analysis",
+    "section": "Data Dictionary",
+    "text": "Data Dictionary\n\nData dictionary is available here: https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-10-22#data-dictionary."
+  },
+  {
+    "objectID": "example_analysis.html#data-wrangling",
+    "href": "example_analysis.html#data-wrangling",
+    "title": "Example analysis",
+    "section": "Data Wrangling",
+    "text": "Data Wrangling\n\nlibrary(dplyr)\nlibrary(lubridate)\n\n\nAttaching package: 'lubridate'\n\n\nThe following objects are masked from 'package:base':\n\n    date, intersect, setdiff, union\n\nlibrary(tidyr)\n# Check the uniqueness of movie titles\nh_movies_uni <- h_movies %>% distinct(title, .keep_all = TRUE)\n\n# Use lubridate to create a column called release_year that is a Date class\nh_movies_uni1 = h_movies_uni %>% filter(str_length(release_date) == 4) %>% mutate(release_date = paste0(\"1-Jan-\", release_date))\nh_movies_uni2 = h_movies_uni %>% filter(str_length(release_date) != 4)\n\nh_movies_uni <- rbind(h_movies_uni1, h_movies_uni2)\nh_movies_uni <- h_movies_uni %>% mutate(release_year = year(dmy(release_date)))\n\n# Remove columns that we do not want to use\nh_movies_uni <- h_movies_uni %>% select(title, release_country, release_year, review_rating, filming_locations, plot)\n\n# Keep US only and drop rows with missing values\nh_movies_us <- h_movies_uni %>% filter(release_country == \"USA\") %>% drop_na()\nh_movies_us\n\n# A tibble: 1,326 × 6\n   title                              release_co…¹ relea…² revie…³ filmi…⁴ plot \n   <chr>                              <chr>          <dbl>   <dbl> <chr>   <chr>\n 1 Dark Medicine (2013)               USA             2013     2.8 Atlant… Dire…\n 2 Return of the Killer Shrews (2012) USA             2012     2.7 Sanna … Dire…\n 3 The Perfect House (2013)           USA             2013     4.3 Buffal… Dire…\n 4 Slaughter Daughter (2012)          USA             2012     4.4 Jersey… Dire…\n 5 Elder Island (2016)                USA             2016     3.2 Beaver… Dire…\n 6 After the Dawn (2012)              USA             2012     3.6 Ham La… Dire…\n 7 Fear Town, USA (2014)              USA             2014     5.5 New Yo… Dire…\n 8 Dead Girls (2014)                  USA             2014     3.5 Chicag… Dire…\n 9 Other Halves (2015)                USA             2016     3.5 San Fr… Dire…\n10 Gas Light (2016)                   USA             2016     8.6 Shawne… Dire…\n# … with 1,316 more rows, and abbreviated variable names ¹​release_country,\n#   ²​release_year, ³​review_rating, ⁴​filming_locations\n\n\n\n# Extract rows containing Baltimore as the filming location\nh_movies_us %>% filter(grepl(\"Baltimore\", filming_locations, ignore.case = TRUE)) %>% print(n = Inf) \n\n# A tibble: 9 × 6\n  title                               release_co…¹ relea…² revie…³ filmi…⁴ plot \n  <chr>                               <chr>          <dbl>   <dbl> <chr>   <chr>\n1 Treasure Chest of Horrors II (2013) USA             2013     3.7 Baltim… Dire…\n2 Sociopathia (2015)                  USA             2015     4.3 Baltim… Dire…\n3 The Break-In (2016)                 USA             2016     4.3 Baltim… Dire…\n4 Fireangels: A Drifter's Fury (2017) USA             2017     2.8 Baltim… Dire…\n5 Camp Killer (2016)                  USA             2016     6.2 Baltim… Dire…\n6 The Suffering (2016)                USA             2016     4.4 Baltim… Dire…\n7 House of Good and Evil (2013)       USA             2013     6.9 Baltim… Dire…\n8 WNUF Halloween Special (2013)       USA             2013     6.7 Baltim… Dire…\n9 The Night Watchmen (2017)           USA             2017     5.4 Baltim… Dire…\n# … with abbreviated variable names ¹​release_country, ²​release_year,\n#   ³​review_rating, ⁴​filming_locations\n\n\n\n\n\n\n\n\nNote\n\n\n\nNote that among the 1,326 movies with completed data released in the US, 9 were filmed in Baltimore, MD. Therefore, we do not see that Baltimore is a popular place for horror movie filming.\n\n\n\n# Rank the filming locations for movies released in the US and get the top 10\nh_movies_us %>% count(filming_locations, sort = TRUE) %>% slice_head(n = 10)\n\n# A tibble: 10 × 2\n   filming_locations                       n\n   <chr>                               <int>\n 1 Los Angeles, California, USA          149\n 2 Vancouver, British Columbia, Canada    21\n 3 New York City, New York, USA           17\n 4 Atlanta, Georgia, USA                  16\n 5 Chicago, Illinois, USA                 14\n 6 Toronto, Ontario, Canada               13\n 7 Santa Clarita, California, USA         12\n 8 Baltimore, Maryland, USA                9\n 9 Baton Rouge, Louisiana, USA             9\n10 Dallas, Texas, USA                      9\n\n\n\nlibrary(tidytext)\n# Get the frequency of the words and sort in a decreasing manner\npop_words <- h_movies_us %>% unnest_tokens(output = word, input = plot, token = \"words\") %>% anti_join(stop_words) %>% count(word, sort = TRUE)\n\nJoining, by = \"word\"\n\npop_words\n\n# A tibble: 12,221 × 2\n   word         n\n   <chr>    <int>\n 1 directed  1325\n 2 michael    159\n 3 friends    132\n 4 house      131\n 5 david      126\n 6 family     125\n 7 life       123\n 8 james      115\n 9 town       113\n10 home       111\n# … with 12,211 more rows\n\n\n\n# Remove the word \"directed\" since nearly every plot starts with it and remove a few names,\n# then only keep the top 25 most frequent words\npop_words_25 <- pop_words %>% filter(!(word %in% c(\"directed\", \"michael\", \"david\", \"james\", \"john\", \"film\", \"robert\", \"paul\", \"ryan\", \"mark\", \"adam\", \"scott\", \"jason\"))) %>% slice_head(n = 25)\npop_words_25\n\n# A tibble: 25 × 2\n   word           n\n   <chr>      <int>\n 1 friends      132\n 2 house        131\n 3 family       125\n 4 life         123\n 5 town         113\n 6 home         111\n 7 night        103\n 8 killer       101\n 9 mysterious    95\n10 horror        91\n# … with 15 more rows\n\n\n\nlibrary(wordcloud)\n\nLoading required package: RColorBrewer\n\nset.seed(1109)\npop_words_25 %>% with(wordcloud(word, n, max.words = 25, colors = c(\"cornflowerblue\", \"darkorange\"), scale=c(3.6, 0.5)))\n\n\n\n\n\nFigure 1: A word cloud of the top 25 most frequent words"
+  },
+  {
+    "objectID": "example_analysis.html#plots",
+    "href": "example_analysis.html#plots",
+    "title": "Example analysis",
+    "section": "Plots",
+    "text": "Plots\nPlot 1. A scatter plot of average review ratings by year:\n\nlibrary(ggplot2)\nh_movies_us %>% group_by(release_year) %>% summarise(avg_rating = mean(review_rating)) %>% ggplot(aes(x = release_year, y = avg_rating)) + geom_point() + labs(title = \"Average Review Rating by Release Year\", subtitle = \"This is a scatter plot of the average review rating for horror movies released in the US between\\n2012 and 2017. There is an increasing trend in the average rating.\", caption = \"Mincen Liu\") +\n  xlab(\"Release Year\") + ylab(\"Average Rating\")\n\n\n\n\nPlot 2. A histogram of movie count by year in each of the top 6 filming locations:\n\npl <- h_movies_us %>% count(filming_locations, sort = TRUE) %>% slice_head(n = 6)\ndt <- h_movies_us %>% filter(filming_locations %in% pl$filming_locations)\ndt %>% ggplot(aes(x = release_year)) + geom_histogram() + facet_wrap(filming_locations ~.) + \n  labs(title = \"Number of Movies Released in the Top 6 Filming Locations\", subtitle = \"This is a histogram of the number of horror movies released in the US between 2012 and 2017,\\nsubgrouped by the top 6 filming places.\", caption = \"Mincen Liu\") +\n  xlab(\"Release Year\") + ylab(\"Count\")\n\n`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.\n\n\n\n\n\nPlot 3. A bar plot with the top 25 words in the plots on the y-axis and the frequency of each word on the x-axis:\n\npop_words_25 %>% mutate(word = fct_reorder(word, n)) %>% ggplot(aes(word, n)) + geom_col() + coord_flip() +\n  labs(title = \"Frequency of the Top 25 Words in the Plots\", subtitle = \"This is a bar plot displaying the frequency of each of the top 25 most frequent words in\\nthe plots of horror movies released in the US.\", caption = \"Mincen Liu\") +\n  xlab(\"Top Words\") + ylab(\"Frequency\")\n\n\n\n\n\n\n\n\n\n\nTip\n\n\n\nInterestingly, the most frequent word is friends which appears 132 times.\n\n\n\n\n\nSpongebob and Patrick\n\n\n(WallpaperAccess, n.d.)"
+  },
+  {
+    "objectID": "example_analysis.html#summary",
+    "href": "example_analysis.html#summary",
+    "title": "Example analysis",
+    "section": "Summary",
+    "text": "Summary\nBased on the analysis of this dataset, we are not able to conclude that Baltimore is a popular place for horror movie filming since there are only 9/1,326 films shot in this city. In the short plot descriptions, the top words include “friends”, “family”, “life”, “night”, “killer”, “mysterious”, etc. Additionally, the average movie ratings across years are displayed in Plot 1 and there is an increasing trend in the average ratings. The data analysis answers the questions proposed in the first section well."
+  },
+  {
+    "objectID": "example_analysis.html#list-of-functions-used",
+    "href": "example_analysis.html#list-of-functions-used",
+    "title": "Example analysis",
+    "section": "List of Functions Used",
+    "text": "List of Functions Used\n\ndplyr: glimpse(), distinct(), filter(), mutate(), select(), count(), slice_head(), anti_join(), group_by(), summarise()\ntidyr: drop_na()\nggplot2: geom_point(), geom_histogram(), geom_col()"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Mincen Liu",
+    "section": "",
+    "text": "Hi! My name is Mincen Liu. I am a biostatistics Master’s student at the Johns Hopkins Bloomberg School of Public Health. I am interested in infectious diseases, epidemiological methods, and health policy evaluation."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "I am originally from Jinan, China. I came to the US for my undergraduate studies and continue to pursue a Master’s degree in the field of public health."
+  },
+  {
+    "objectID": "about.html#education",
+    "href": "about.html#education",
+    "title": "About",
+    "section": "Education",
+    "text": "Education\nJohns Hopkins University | Baltimore, MD | Aug 2022-Present\nScM in Biostatistics\nUniversity of North Carolina at Chapel Hill | Chapel Hill, NC | Aug 2019-May 2022\nBSPH with Highest Honors and Highest Distinction in Biostatistics and Mathematics\nMinor in Computer Science"
+  },
+  {
+    "objectID": "about.html#experience",
+    "href": "about.html#experience",
+    "title": "About",
+    "section": "Experience",
+    "text": "Experience\nUNC Center for AIDS Research (CFAR) Biostatistics Core | May 2021-May 2022\nStudent Research Assistant"
+  },
+  {
+    "objectID": "about.html#publications",
+    "href": "about.html#publications",
+    "title": "About",
+    "section": "Publications",
+    "text": "Publications\n\nRosenberg, N.E., Shook-Sa, B.E., Liu, M., Stranix-Chibanda, L., Yotebieng, M., Sam-Agudu, N.A., Hudgens, M.G., Phiri, S.J., Mutale, W., Bekker, L.G., Moyo, S., Zuma, K., Charurat, M.E., Justman, J., Chi, B.H. (in press). Adult HIV-1 incidence across 15 high-burden countries in Sub-Saharan Africa from 2015-2019: pooled nationally representative estimates. The lancet. HIV.\nLiu, H. S., Duan, S. J., Liu, S. D., Jia, F. S., Zhu, L. M., & Liu, M. C. (2018). Robot-assisted percutaneous screw placement combined with pelvic internal fixator for minimally invasive treatment of unstable pelvic ring fractures. The international journal of medical robotics + computer assisted surgery : MRCAS, 14(5), e1927. https://doi.org/10.1002/rcs.1927"
+  },
+  {
+    "objectID": "about.html#presentations",
+    "href": "about.html#presentations",
+    "title": "About",
+    "section": "Presentations",
+    "text": "Presentations\n\nRosenberg, N.E., Young, A., Liu, M., Shook-Sa, B.E., Sam-Agudu, N.A., Stranix-Chibanda, L., Yotebieng, M., Charurat, M., Justman, J.E., Chi, B.H. (2022, July 29-August 2). Identifying women at highest risk for HIV acquisition across sub-Saharan Africa: A risk score based on machine-learning methods. International AIDS Conference, Montreal, QC, Canada.\nRosenberg, N.E., Shook-Sa, B., Liu, M., Stranix-Chibanda, L., Yotebieng, M., Sam-Agudu, N., Phiri, S.J., Mutale, W., Bekker, L., Charurat, M.E., Justman, J.E., Chi, B. (2022, February 12-24). Empirical Estimates of Adult HIV Incidence Across 12 Countries in Sub-Saharan Africa. Conference on Retroviruses and Opportunistic Infections, Denver, CO, United States."
+  },
+  {
+    "objectID": "about.html#honors-and-awards",
+    "href": "about.html#honors-and-awards",
+    "title": "About",
+    "section": "Honors and Awards",
+    "text": "Honors and Awards\nPhi Beta Kappa, University of North Carolina at Chapel Hill | Feb 2021"
+  },
+  {
+    "objectID": "about.html#professional-membership",
+    "href": "about.html#professional-membership",
+    "title": "About",
+    "section": "Professional Membership",
+    "text": "Professional Membership\nAmerican Statistical Association"
+  }
+]
