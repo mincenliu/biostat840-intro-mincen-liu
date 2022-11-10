@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Mincen Liu - Example analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Mincen Liu</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html">Home</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html">About</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./example_analysis.html" aria-current="page">Example analysis</a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#question" id="toc-question" class="nav-link active" data-scroll-target="#question">Question</a></li>
+  <li><a href="#intended-audience" id="toc-intended-audience" class="nav-link" data-scroll-target="#intended-audience">Intended Audience</a></li>
+  <li><a href="#original-data" id="toc-original-data" class="nav-link" data-scroll-target="#original-data">Original Data</a></li>
+  <li><a href="#data-dictionary" id="toc-data-dictionary" class="nav-link" data-scroll-target="#data-dictionary">Data Dictionary</a></li>
+  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">Data Wrangling</a></li>
+  <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots">Plots</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#list-of-functions-used" id="toc-list-of-functions-used" class="nav-link" data-scroll-target="#list-of-functions-used">List of Functions Used</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Example analysis</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<style type="text/css">
+pre, code {white-space:pre !important; overflow-x:auto}
+</style>
+</div>
+<section id="question" class="level2">
+<h2 class="anchored" data-anchor-id="question">Question</h2>
+<ul>
+<li>Prior to this year’s Halloween, one of my friends visiting me in Baltimore said that many horror movies have been shot in Baltimore. This intrigued me to explore the common filming locations, popular words in the plots, and the ratings of horror movies released in the US.</li>
+<li>In this example data analysis, I focus on three questions:
+<ul>
+<li>How many times does Baltimore appear as the filming city? Is it really a popular place?</li>
+<li>What are the top 25 most frequent words in the plots?</li>
+<li>What are the average review ratings by year?</li>
+</ul></li>
+</ul>
+</section>
+<section id="intended-audience" class="level2">
+<h2 class="anchored" data-anchor-id="intended-audience">Intended Audience</h2>
+<ul>
+<li>The intended audience for this data analysis is the general public who has the same curiosity of exploring US horror movie data as me.</li>
+</ul>
+</section>
+<section id="original-data" class="level2">
+<h2 class="anchored" data-anchor-id="original-data">Original Data</h2>
+<ul>
+<li>The dataset comes from IMDB <span class="citation" data-cites="promptcloud_2017">(<a href="#ref-promptcloud_2017" role="doc-biblioref">PromptCloud 2017</a>)</span> by way of Kaggle. I found the dataset on TidyTuesday <span class="citation" data-cites="harmon">(<a href="#ref-harmon" role="doc-biblioref">Harmon, n.d.</a>)</span> under Episode 10: Horror Movies. The dataset contains movies worldwide from 2012 onwards.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>here() starts at /Users/mincen/Desktop/JHU/Courses/Fall22Term2/140.840_Statistical_Programming/Projects/biostat840-intro-mincen-liu</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tests if a directory named "data" exists locally</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="fu">here</span>(<span class="st">"data"</span>))) { <span class="fu">dir.create</span>(<span class="fu">here</span>(<span class="st">"data"</span>)) }</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(<span class="fu">here</span>(<span class="st">"data"</span>,<span class="st">"h_movies.RDS"</span>))){</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  h_movies <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-22/horror_movies.csv"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># save the files to RDS objects</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(h_movies, <span class="at">file =</span> <span class="fu">here</span>(<span class="st">"data"</span>,<span class="st">"h_movies.RDS"</span>))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 3328 Columns: 12</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (11): title, genres, release_date, release_country, movie_rating, movie_...
+dbl  (1): review_rating
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>h_movies <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">here</span>(<span class="st">"data"</span>,<span class="st">"h_movies.RDS"</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+✔ tibble  3.1.8     ✔ dplyr   1.0.9
+✔ tidyr   1.2.0     ✔ stringr 1.4.1
+✔ readr   2.1.2     ✔ forcats 0.5.2
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(h_movies)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 3,328
+Columns: 12
+$ title             &lt;chr&gt; "Gut (2012)", "The Haunting of Mia Moss (2017)", "Sl…
+$ genres            &lt;chr&gt; "Drama| Horror| Thriller", "Horror", "Horror", "Come…
+$ release_date      &lt;chr&gt; "26-Oct-12", "13-Jan-17", "21-Oct-17", "23-Apr-13", …
+$ release_country   &lt;chr&gt; "USA", "USA", "Canada", "USA", "USA", "UK", "USA", "…
+$ movie_rating      &lt;chr&gt; NA, NA, NA, "NOT RATED", NA, NA, "NOT RATED", NA, "P…
+$ review_rating     &lt;dbl&gt; 3.9, NA, NA, 3.7, 5.8, NA, 5.1, 6.5, 4.6, 5.4, 5.3, …
+$ movie_run_time    &lt;chr&gt; "91 min", NA, NA, "82 min", "80 min", "93 min", "90 …
+$ plot              &lt;chr&gt; "Directed by Elias. With Jason Vail, Nicholas Wilder…
+$ cast              &lt;chr&gt; "Jason Vail|Nicholas Wilder|Sarah Schoofs|Kirstianna…
+$ language          &lt;chr&gt; "English", "English", "English", "English", "Italian…
+$ filming_locations &lt;chr&gt; "New York, USA", NA, "Sudbury, Ontario, Canada", "Ba…
+$ budget            &lt;chr&gt; NA, "$30,000", NA, NA, NA, "$3,400,000", NA, NA, NA,…</code></pre>
+</div>
+</div>
+</section>
+<section id="data-dictionary" class="level2">
+<h2 class="anchored" data-anchor-id="data-dictionary">Data Dictionary</h2>
+<ul>
+<li>Data dictionary is available here: <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-10-22#data-dictionary" class="uri">https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-10-22#data-dictionary</a>.</li>
+</ul>
+</section>
+<section id="data-wrangling" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="data-wrangling">Data Wrangling</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'lubridate'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    date, intersect, setdiff, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the uniqueness of movie titles</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>h_movies_uni <span class="ot">&lt;-</span> h_movies <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(title, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Use lubridate to create a column called release_year that is a Date class</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>h_movies_uni1 <span class="ot">=</span> h_movies_uni <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">str_length</span>(release_date) <span class="sc">==</span> <span class="dv">4</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">release_date =</span> <span class="fu">paste0</span>(<span class="st">"1-Jan-"</span>, release_date))</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>h_movies_uni2 <span class="ot">=</span> h_movies_uni <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">str_length</span>(release_date) <span class="sc">!=</span> <span class="dv">4</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>h_movies_uni <span class="ot">&lt;-</span> <span class="fu">rbind</span>(h_movies_uni1, h_movies_uni2)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>h_movies_uni <span class="ot">&lt;-</span> h_movies_uni <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">release_year =</span> <span class="fu">year</span>(<span class="fu">dmy</span>(release_date)))</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove columns that we do not want to use</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>h_movies_uni <span class="ot">&lt;-</span> h_movies_uni <span class="sc">%&gt;%</span> <span class="fu">select</span>(title, release_country, release_year, review_rating, filming_locations, plot)</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep US only and drop rows with missing values</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>h_movies_us <span class="ot">&lt;-</span> h_movies_uni <span class="sc">%&gt;%</span> <span class="fu">filter</span>(release_country <span class="sc">==</span> <span class="st">"USA"</span>) <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>()</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>h_movies_us</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,326 × 6
+   title                              release_co…¹ relea…² revie…³ filmi…⁴ plot 
+   &lt;chr&gt;                              &lt;chr&gt;          &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;
+ 1 Dark Medicine (2013)               USA             2013     2.8 Atlant… Dire…
+ 2 Return of the Killer Shrews (2012) USA             2012     2.7 Sanna … Dire…
+ 3 The Perfect House (2013)           USA             2013     4.3 Buffal… Dire…
+ 4 Slaughter Daughter (2012)          USA             2012     4.4 Jersey… Dire…
+ 5 Elder Island (2016)                USA             2016     3.2 Beaver… Dire…
+ 6 After the Dawn (2012)              USA             2012     3.6 Ham La… Dire…
+ 7 Fear Town, USA (2014)              USA             2014     5.5 New Yo… Dire…
+ 8 Dead Girls (2014)                  USA             2014     3.5 Chicag… Dire…
+ 9 Other Halves (2015)                USA             2016     3.5 San Fr… Dire…
+10 Gas Light (2016)                   USA             2016     8.6 Shawne… Dire…
+# … with 1,316 more rows, and abbreviated variable names ¹​release_country,
+#   ²​release_year, ³​review_rating, ⁴​filming_locations</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract rows containing Baltimore as the filming location</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>h_movies_us <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"Baltimore"</span>, filming_locations, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> <span class="fu">print</span>(<span class="at">n =</span> <span class="cn">Inf</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 6
+  title                               release_co…¹ relea…² revie…³ filmi…⁴ plot 
+  &lt;chr&gt;                               &lt;chr&gt;          &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;
+1 Treasure Chest of Horrors II (2013) USA             2013     3.7 Baltim… Dire…
+2 Sociopathia (2015)                  USA             2015     4.3 Baltim… Dire…
+3 The Break-In (2016)                 USA             2016     4.3 Baltim… Dire…
+4 Fireangels: A Drifter's Fury (2017) USA             2017     2.8 Baltim… Dire…
+5 Camp Killer (2016)                  USA             2016     6.2 Baltim… Dire…
+6 The Suffering (2016)                USA             2016     4.4 Baltim… Dire…
+7 House of Good and Evil (2013)       USA             2013     6.9 Baltim… Dire…
+8 WNUF Halloween Special (2013)       USA             2013     6.7 Baltim… Dire…
+9 The Night Watchmen (2017)           USA             2017     5.4 Baltim… Dire…
+# … with abbreviated variable names ¹​release_country, ²​release_year,
+#   ³​review_rating, ⁴​filming_locations</code></pre>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note that among the 1,326 movies with completed data released in the US, 9 were filmed in Baltimore, MD. Therefore, we do not see that Baltimore is a popular place for horror movie filming.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rank the filming locations for movies released in the US and get the top 10</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>h_movies_us <span class="sc">%&gt;%</span> <span class="fu">count</span>(filming_locations, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   filming_locations                       n
+   &lt;chr&gt;                               &lt;int&gt;
+ 1 Los Angeles, California, USA          149
+ 2 Vancouver, British Columbia, Canada    21
+ 3 New York City, New York, USA           17
+ 4 Atlanta, Georgia, USA                  16
+ 5 Chicago, Illinois, USA                 14
+ 6 Toronto, Ontario, Canada               13
+ 7 Santa Clarita, California, USA         12
+ 8 Baltimore, Maryland, USA                9
+ 9 Baton Rouge, Louisiana, USA             9
+10 Dallas, Texas, USA                      9</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the frequency of the words and sort in a decreasing manner</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>pop_words <span class="ot">&lt;-</span> h_movies_us <span class="sc">%&gt;%</span> <span class="fu">unnest_tokens</span>(<span class="at">output =</span> word, <span class="at">input =</span> plot, <span class="at">token =</span> <span class="st">"words"</span>) <span class="sc">%&gt;%</span> <span class="fu">anti_join</span>(stop_words) <span class="sc">%&gt;%</span> <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining, by = "word"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pop_words</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12,221 × 2
+   word         n
+   &lt;chr&gt;    &lt;int&gt;
+ 1 directed  1325
+ 2 michael    159
+ 3 friends    132
+ 4 house      131
+ 5 david      126
+ 6 family     125
+ 7 life       123
+ 8 james      115
+ 9 town       113
+10 home       111
+# … with 12,211 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove the word "directed" since nearly every plot starts with it and remove a few names,</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># then only keep the top 25 most frequent words</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>pop_words_25 <span class="ot">&lt;-</span> pop_words <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>(word <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"directed"</span>, <span class="st">"michael"</span>, <span class="st">"david"</span>, <span class="st">"james"</span>, <span class="st">"john"</span>, <span class="st">"film"</span>, <span class="st">"robert"</span>, <span class="st">"paul"</span>, <span class="st">"ryan"</span>, <span class="st">"mark"</span>, <span class="st">"adam"</span>, <span class="st">"scott"</span>, <span class="st">"jason"</span>))) <span class="sc">%&gt;%</span> <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">25</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>pop_words_25</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 25 × 2
+   word           n
+   &lt;chr&gt;      &lt;int&gt;
+ 1 friends      132
+ 2 house        131
+ 3 family       125
+ 4 life         123
+ 5 town         113
+ 6 home         111
+ 7 night        103
+ 8 killer       101
+ 9 mysterious    95
+10 horror        91
+# … with 15 more rows</code></pre>
+</div>
+</div>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(wordcloud)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: RColorBrewer</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1109</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>pop_words_25 <span class="sc">%&gt;%</span> <span class="fu">with</span>(<span class="fu">wordcloud</span>(word, n, <span class="at">max.words =</span> <span class="dv">25</span>, <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"cornflowerblue"</span>, <span class="st">"darkorange"</span>), <span class="at">scale=</span><span class="fu">c</span>(<span class="fl">3.6</span>, <span class="fl">0.5</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div id="fig-words" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="example_analysis_files/figure-html/fig-words-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;1: A word cloud of the top 25 most frequent words</figcaption><p></p>
+</figure>
+</div>
+</div></div></div>
+</section>
+<section id="plots" class="level2">
+<h2 class="anchored" data-anchor-id="plots">Plots</h2>
+<p>Plot 1. A scatter plot of average review ratings by year:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>h_movies_us <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(release_year) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">avg_rating =</span> <span class="fu">mean</span>(review_rating)) <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> release_year, <span class="at">y =</span> avg_rating)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Average Review Rating by Release Year"</span>, <span class="at">subtitle =</span> <span class="st">"This is a scatter plot of the average review rating for horror movies released in the US between</span><span class="sc">\n</span><span class="st">2012 and 2017. There is an increasing trend in the average rating."</span>, <span class="at">caption =</span> <span class="st">"Mincen Liu"</span>) <span class="sc">+</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Release Year"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Average Rating"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="example_analysis_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Plot 2. A histogram of movie count by year in each of the top 6 filming locations:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>pl <span class="ot">&lt;-</span> h_movies_us <span class="sc">%&gt;%</span> <span class="fu">count</span>(filming_locations, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">6</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>dt <span class="ot">&lt;-</span> h_movies_us <span class="sc">%&gt;%</span> <span class="fu">filter</span>(filming_locations <span class="sc">%in%</span> pl<span class="sc">$</span>filming_locations)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>dt <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> release_year)) <span class="sc">+</span> <span class="fu">geom_histogram</span>() <span class="sc">+</span> <span class="fu">facet_wrap</span>(filming_locations <span class="sc">~</span>.) <span class="sc">+</span> </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Number of Movies Released in the Top 6 Filming Locations"</span>, <span class="at">subtitle =</span> <span class="st">"This is a histogram of the number of horror movies released in the US between 2012 and 2017,</span><span class="sc">\n</span><span class="st">subgrouped by the top 6 filming places."</span>, <span class="at">caption =</span> <span class="st">"Mincen Liu"</span>) <span class="sc">+</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Release Year"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="example_analysis_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Plot 3. A bar plot with the top 25 words in the plots on the y-axis and the frequency of each word on the x-axis:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>pop_words_25 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">word =</span> <span class="fu">fct_reorder</span>(word, n)) <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(word, n)) <span class="sc">+</span> <span class="fu">geom_col</span>() <span class="sc">+</span> <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Frequency of the Top 25 Words in the Plots"</span>, <span class="at">subtitle =</span> <span class="st">"This is a bar plot displaying the frequency of each of the top 25 most frequent words in</span><span class="sc">\n</span><span class="st">the plots of horror movies released in the US."</span>, <span class="at">caption =</span> <span class="st">"Mincen Liu"</span>) <span class="sc">+</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Top Words"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="example_analysis_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Interestingly, the most frequent word is <code>friends</code> which appears 132 times.</p>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="s_n_p.jpg" class="img-fluid figure-img" style="width:50.0%"></p>
+<p></p><figcaption class="figure-caption">Spongebob and Patrick</figcaption><p></p>
+</figure>
+</div>
+<p><span class="citation" data-cites="spongebob">(<a href="#ref-spongebob" role="doc-biblioref">WallpaperAccess, n.d.</a>)</span></p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>Based on the analysis of this dataset, we are not able to conclude that Baltimore is a popular place for horror movie filming since there are only 9/1,326 films shot in this city. In the short plot descriptions, the top words include “friends”, “family”, “life”, “night”, “killer”, “mysterious”, etc. Additionally, the average movie ratings across years are displayed in Plot 1 and there is an increasing trend in the average ratings. The data analysis answers the questions proposed in the first section well.</p>
+</section>
+<section id="list-of-functions-used" class="level2">
+<h2 class="anchored" data-anchor-id="list-of-functions-used">List of Functions Used</h2>
+<ul>
+<li><code>dplyr</code>: <code>glimpse()</code>, <code>distinct()</code>, <code>filter()</code>, <code>mutate()</code>, <code>select()</code>, <code>count()</code>, <code>slice_head()</code>, <code>anti_join()</code>, <code>group_by()</code>, <code>summarise()</code></li>
+<li><code>tidyr</code>: <code>drop_na()</code></li>
+<li><code>ggplot2</code>: <code>geom_point()</code>, <code>geom_histogram()</code>, <code>geom_col()</code></li>
+</ul>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-harmon" class="csl-entry" role="doc-biblioentry">
+Harmon, Jon. n.d. <span>“Tidy Tuesday - Episodes Archive.”</span> <em>Tidy Tuesday RSS</em>. <a href="https://www.tidytuesday.com/episodes">https://www.tidytuesday.com/episodes</a>.
+</div>
+<div id="ref-promptcloud_2017" class="csl-entry" role="doc-biblioentry">
+PromptCloud. 2017. <span>“IMDB Horror Movie Dataset [2012 Onwards].”</span> <em>Kaggle</em>. <a href="https://www.kaggle.com/PromptCloudHQ/imdb-horror-movie-dataset">https://www.kaggle.com/PromptCloudHQ/imdb-horror-movie-dataset</a>.
+</div>
+<div id="ref-spongebob" class="csl-entry" role="doc-biblioentry">
+WallpaperAccess. n.d. <span>“Spongebob and Patrick Wallpapers.”</span> <a href="https://wallpaperaccess.com/spongebob-and-patrick">https://wallpaperaccess.com/spongebob-and-patrick</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
